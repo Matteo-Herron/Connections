@@ -52,14 +52,6 @@ block_vec = [
 [pygame.Rect(750.0, 341.0, 210.0, 62.0), 0],
 ]
 
-#Row positions
-row_vec = [
-    [30.0, 62.0, 0],
-    [30.0, 155.0, 0],
-    [30.0, 248.0, 0],
-    [30.0, 341.0, 0]
-]
-
 #Collision Boxes
 quit_rect = pygame.Rect(0.0, 0.0, 44.0, 46.0)
 enter_rect = pygame.Rect(348.0, 420.0, 303.0, 133.0)
@@ -72,7 +64,9 @@ x_un_active = False
 draw_active = False
 enter_un_active = False
 enter_cli_active = False
+redraw_active = True
 game_font = pygame.freetype.Font("font.ttf", 35)
+row_counter = 0
 
 #Clicked box vector
 clicked_boxes = []
@@ -150,6 +144,13 @@ while run:
                     game_font.render_to(screen, (chosen_block[0].x + 30, chosen_block[0].y + 10), example[2+i], (0, 0, 0))
                     pygame.display.flip()
             draw_active = True
+
+        if redraw_active == False:
+            for block in block_vec:
+                pygame.draw.rect(screen, pygame.Color(210, 180, 180, 255), block[0])
+                game_font.render_to(screen, (block[0].x + 30, block[0].y + 10), block[1], (0, 0, 0))
+                pygame.display.flip()
+            redraw_active = True
         
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -163,6 +164,11 @@ while run:
                     x_cli_active = True
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     gamestate = "menu"
+                    draw_active = False
+                    enter_un_active = False
+                    for block in block_vec:
+                        block[1] = 0
+                    row_counter = 0
             if enter_rect.collidepoint(pos) and len(clicked_boxes) == 4:
                 if enter_cli_active == False:
                     enter_un_active = False
@@ -184,6 +190,13 @@ while run:
                         time.sleep(1.5)
                         screen.blit(word_cover, (681, 470))
                         pygame.display.flip()
+                        redraw_active = False
+                        for i in range(4):
+                            word_hold = clicked_boxes[i][1]
+                            clicked_boxes[i][1] = block_vec[4*row_counter + i][1]
+                            block_vec[4*row_counter + i][1] = word_hold
+                        row_counter += 1
+                        clicked_boxes = []
                     elif max(answer_closeness) == 3:
                         screen.blit(one_away, (681, 470))
                         pygame.display.flip()
@@ -219,35 +232,3 @@ while run:
                 run = False
 
 pygame.quit()
-
-
-
-
-
-'''
-16 rectangles objects offset by 0
-print one random word in each
-check if mouse is touching one
-if it is and it clicks and the rectangle isn't black:
-    highlight black
-    push rectangle to clicked list
-if it is and it clicks and the rectangle is black:
-    unhighlight black
-    pop rectangle from clicked list
-if four rectangles are in the clicked list:
-    submit button is clickable
-    click:
-        if one is incorrect
-            print "one away"
-            update try counter by -1
-        if they are correct
-            print 4 members next to each other on top row offset by number of correct answers
-            highlight with the category color and print category and words
-            trash the 4 rects so they can't be rehighlighted
-        if >1 are incorrect
-            update try counter by -1
-if try counter = 0
-    print "better luck next time"
-    group available words and highlight/print one category at a time
-    popup - quit or restart
-'''
