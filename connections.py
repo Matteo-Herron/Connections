@@ -1,5 +1,6 @@
 import pygame
 import random
+import time
 
 pygame.init()
 
@@ -14,6 +15,10 @@ x_un = pygame.image.load("Game Textures/x_un.png").convert()
 x_cli = pygame.image.load("Game Textures/x_cli.png").convert()
 enter_un = pygame.image.load("Game Textures/enter_un.png").convert()
 enter_cli = pygame.image.load("Game Textures/enter_cli.png").convert()
+one_away = pygame.image.load("Game Textures/one_away.png").convert()
+word_cover = pygame.image.load("Game Textures/word_cover.png").convert()
+try_again = pygame.image.load("Game Textures/try_again.png").convert()
+nice_job = pygame.image.load("Game Textures/nice_job.png").convert()
 
 
 
@@ -45,6 +50,14 @@ block_vec = [
 [pygame.Rect(270.0, 341.0, 210.0, 62.0), 0],
 [pygame.Rect(510.0, 341.0, 210.0, 62.0), 0],
 [pygame.Rect(750.0, 341.0, 210.0, 62.0), 0],
+]
+
+#Row positions
+row_vec = [
+    [30.0, 62.0, 0],
+    [30.0, 155.0, 0],
+    [30.0, 248.0, 0],
+    [30.0, 341.0, 0]
 ]
 
 #Collision Boxes
@@ -166,14 +179,23 @@ while run:
                         answer_closeness.append(correct_counter)
                         correct_counter = 0
                     if max(answer_closeness) == 4:
-                        print("correct!")
-                        #todo
+                        screen.blit(nice_job, (681, 470))
+                        pygame.display.flip()
+                        time.sleep(1.5)
+                        screen.blit(word_cover, (681, 470))
+                        pygame.display.flip()
                     elif max(answer_closeness) == 3:
-                        print("one away")
-                        #todo
+                        screen.blit(one_away, (681, 470))
+                        pygame.display.flip()
+                        time.sleep(1.5)
+                        screen.blit(word_cover, (681, 470))
+                        pygame.display.flip()
                     else:
-                        print("incorrect")
-                        #todo                  
+                        screen.blit(try_again, (681, 470))
+                        pygame.display.flip()
+                        time.sleep(1.5)
+                        screen.blit(word_cover, (681, 470))
+                        pygame.display.flip()        
             if event.type == pygame.MOUSEBUTTONDOWN:
                 for block in block_vec:
                     block_identity = block[0]
