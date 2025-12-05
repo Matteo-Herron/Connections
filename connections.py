@@ -6,14 +6,14 @@ pygame.init()
 screen = pygame.display.set_mode((1000,558))
 
 #Textures
-normal = pygame.image.load("game pics/normal.png").convert()
-start = pygame.image.load("game pics/start.png").convert()
-quit = pygame.image.load("game pics/quit.png").convert()
-blank = pygame.image.load("game pics/blank.png").convert()
-x_un = pygame.image.load("game pics/x_un.png").convert()
-x_cli = pygame.image.load("game pics/x_cli.png").convert()
-enter_un = pygame.image.load("game pics/enter_un.png").convert()
-enter_cli = pygame.image.load("game pics/enter_cli.png").convert()
+normal = pygame.image.load("Game Textures/normal.png").convert()
+start = pygame.image.load("Game Textures/start.png").convert()
+quit = pygame.image.load("Game Textures/quit.png").convert()
+blank = pygame.image.load("Game Textures/blank.png").convert()
+x_un = pygame.image.load("Game Textures/x_un.png").convert()
+x_cli = pygame.image.load("Game Textures/x_cli.png").convert()
+enter_un = pygame.image.load("Game Textures/enter_un.png").convert()
+enter_cli = pygame.image.load("Game Textures/enter_cli.png").convert()
 
 
 
