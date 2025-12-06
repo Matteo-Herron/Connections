@@ -19,13 +19,13 @@ one_away = pygame.image.load("Game Textures/one_away.png").convert()
 word_cover = pygame.image.load("Game Textures/word_cover.png").convert()
 try_again = pygame.image.load("Game Textures/try_again.png").convert()
 nice_job = pygame.image.load("Game Textures/nice_job.png").convert()
+finish = pygame.image.load("Game Textures/finish.png").convert()
 
 
-
-example_string = [["yellow","words that are red", "red", "red", "red", "red"],
-                  ["green","words that are green", "green", "green", "green", "green"],
-                  ["blue","words that are blue", "blue", "blue", "blue", "blue"],
-                  ["purple","words that are purple", "purple", "purple", "purple", "purple"]]
+example_string = [["yellow","words that are yellow: yellow, yellow, yellow, yellow", "yellow", "yellow", "yellow", "yellow"],
+                  ["green","words that are green: green, green, green, green", "green", "green", "green", "green"],
+                  ["blue","words that are blue: blue, blue, blue, blue", "blue", "blue", "blue", "blue"],
+                  ["purple","words that are purple: purple, purple, purple, purple", "purple", "purple", "purple", "purple"]]
 
 
 
@@ -52,6 +52,15 @@ block_vec = [
 [pygame.Rect(750.0, 341.0, 210.0, 62.0), 0],
 ]
 
+row_vec = [
+    pygame.Rect(30.0, 62.0, 930.0, 62.0),
+    pygame.Rect(30.0, 155.0, 930.0, 62.0),
+    pygame.Rect(30.0, 248.0, 930.0, 62.0),
+    pygame.Rect(30.0, 341.0, 930.0, 62.0)
+]
+
+completed_vec = []
+
 #Collision Boxes
 quit_rect = pygame.Rect(0.0, 0.0, 44.0, 46.0)
 enter_rect = pygame.Rect(348.0, 420.0, 303.0, 133.0)
@@ -67,6 +76,7 @@ enter_cli_active = False
 redraw_active = True
 game_font = pygame.freetype.Font("font.ttf", 35)
 row_counter = 0
+finish_run = 0
 
 #Clicked box vector
 clicked_boxes = []
@@ -76,6 +86,10 @@ clicked_boxes = []
 run = True
 gamestate = "menu"
 
+#Play music
+pygame.mixer.music.load("Music/main.mp3")
+pygame.mixer.music.set_volume(0.5)
+pygame.mixer.music.play()
 
 while run:
     while gamestate == "menu":
@@ -150,6 +164,16 @@ while run:
                 pygame.draw.rect(screen, pygame.Color(210, 180, 180, 255), block[0])
                 game_font.render_to(screen, (block[0].x + 30, block[0].y + 10), block[1], (0, 0, 0))
                 pygame.display.flip()
+            if len(completed_vec) != 0:
+                for block in completed_vec:
+                    pygame.draw.rect(screen, pygame.Color(block[1]), block[0])
+                    pygame.display.flip()
+                    game_font.render_to(screen, (block[0].x + 30, block[0].y + 10), block[2], (0, 0, 0))
+                    pygame.display.flip()
+                if len(completed_vec) == 4:
+                    pygame.mixer.music.stop()
+                    time.sleep(2)
+                    gamestate = "finish"
             redraw_active = True
         
         for event in pygame.event.get():
@@ -169,6 +193,7 @@ while run:
                     for block in block_vec:
                         block[1] = 0
                     row_counter = 0
+                    completed_vec = []
             if enter_rect.collidepoint(pos) and len(clicked_boxes) == 4:
                 if enter_cli_active == False:
                     enter_un_active = False
@@ -191,12 +216,27 @@ while run:
                         screen.blit(word_cover, (681, 470))
                         pygame.display.flip()
                         redraw_active = False
+
+                        word_hold = clicked_boxes[0][1]
                         for i in range(4):
-                            word_hold = clicked_boxes[i][1]
                             clicked_boxes[i][1] = block_vec[4*row_counter + i][1]
                             block_vec[4*row_counter + i][1] = word_hold
-                        row_counter += 1
+                            for item in block_vec:
+                                if clicked_boxes[i][0].x == item[0].x and clicked_boxes[i][0].y == item[0].y:
+                                    item = clicked_boxes[i]
                         clicked_boxes = []
+
+                        category = 0
+                        for example in example_string:
+                            if word_hold in example:
+                                category = example
+                        
+                        pygame.draw.rect(screen, pygame.Color(category[0]), row_vec[row_counter])
+                        game_font.render_to(screen, (row_vec[row_counter].x + 30, row_vec[row_counter].y + 10), category[1], (0, 0, 0))
+                        pygame.display.flip()
+                        completed_vec.append([row_vec[row_counter], category[0], category[1]])
+
+                        row_counter += 1
                     elif max(answer_closeness) == 3:
                         screen.blit(one_away, (681, 470))
                         pygame.display.flip()
@@ -223,6 +263,18 @@ while run:
                             pygame.draw.rect(screen, pygame.Color(210, 120, 120, 255), block_identity)
                             game_font.render_to(screen, (block_identity.x + 30, block_identity.y + 10), block[1], (0, 0, 0))
                             pygame.display.flip()
+    while gamestate == "finish":
+        if finish_run == 0:
+            finish_run = 1
+            pygame.mixer.music.load("Music/finish.mp3")
+            pygame.mixer.music.set_volume(0.5)
+            pygame.mixer.music.play()
+            screen.blit(finish, (0,0))
+            pygame.display.flip()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                gamestate = "quit"
+                run = False
 
     
     blank_active = False
