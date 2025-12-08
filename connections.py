@@ -22,7 +22,7 @@ nice_job = pygame.image.load("Game Textures/nice_job.png").convert()
 finish = pygame.image.load("Game Textures/finish.png").convert()
 
 
-example_string = [["yellow","words that are yellow: yellow, yellow, yellow, yellow", "yellow", "yellow", "yellow", "yellow"],
+example_string = [["yellow","Things you sign: letter, affidavit, check, contract", "letter", "affidavit", "check", "contract"],
                   ["green","words that are green: green, green, green, green", "green", "green", "green", "green"],
                   ["blue","words that are blue: blue, blue, blue, blue", "blue", "blue", "blue", "blue"],
                   ["purple","words that are purple: purple, purple, purple, purple", "purple", "purple", "purple", "purple"]]
@@ -81,6 +81,14 @@ finish_run = 0
 #Clicked box vector
 clicked_boxes = []
 
+#Hold vector
+hold_vector = []
+
+#Replacing blocks
+replace_vec = []
+
+#One more hold vector
+row_vec_hold = []
 
 #Start Program, main menu state
 run = True
@@ -194,6 +202,7 @@ while run:
                         block[1] = 0
                     row_counter = 0
                     completed_vec = []
+                    clicked_boxes = []
             if enter_rect.collidepoint(pos) and len(clicked_boxes) == 4:
                 if enter_cli_active == False:
                     enter_un_active = False
@@ -217,18 +226,35 @@ while run:
                         pygame.display.flip()
                         redraw_active = False
 
-                        word_hold = clicked_boxes[0][1]
+                        word = clicked_boxes[0][1]
                         for i in range(4):
-                            clicked_boxes[i][1] = block_vec[4*row_counter + i][1]
-                            block_vec[4*row_counter + i][1] = word_hold
+                            for q in range(4):
+                                hold_vector.append(block_vec[4*row_counter + q])
+                            if clicked_boxes[i] not in hold_vector:
+                                replace_vec.append(clicked_boxes[i])
+                            if hold_vector[i] not in clicked_boxes:
+                                row_vec_hold.append(hold_vector[i])
+                        offset = 0
+                        print(replace_vec)
+                        print(row_vec_hold)
+                        for thing in replace_vec:
+                            word_hold = thing[1]
+                            thing[1] = row_vec_hold[offset][1]
+                            row_vec_hold[offset][1] = word_hold
                             for item in block_vec:
-                                if clicked_boxes[i][0].x == item[0].x and clicked_boxes[i][0].y == item[0].y:
-                                    item = clicked_boxes[i]
+                                if thing[0].x == item[0].x and thing[0].y == item[0].y:
+                                    item = thing
+                                elif row_vec_hold[offset][0].x == item[0].x and row_vec_hold[offset][0].y == item[0].y:
+                                    item = row_vec_hold[offset]
+                            offset += 1
                         clicked_boxes = []
+                        hold_vector = []
+                        replace_vec = []
+                        row_vec_hold = []
 
                         category = 0
                         for example in example_string:
-                            if word_hold in example:
+                            if word in example:
                                 category = example
                         
                         pygame.draw.rect(screen, pygame.Color(category[0]), row_vec[row_counter])
