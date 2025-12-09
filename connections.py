@@ -22,10 +22,10 @@ nice_job = pygame.image.load("Game Textures/nice_job.png").convert()
 finish = pygame.image.load("Game Textures/finish.png").convert()
 
 
-example_string = [["yellow","Things you sign: letter, affidavit, check, contract", "letter", "affidavit", "check", "contract"],
-                  ["green","words that are green: green, green, green, green", "green", "green", "green", "green"],
-                  ["blue","words that are blue: blue, blue, blue, blue", "blue", "blue", "blue", "blue"],
-                  ["purple","words that are purple: purple, purple, purple, purple", "purple", "purple", "purple", "purple"]]
+example_string = [["yellow","synonyms for 'free': unlimited, unrestricted, unfettered, complimentary", "unlimited", "unrestricted", "unfettered", "complimentary"],
+                  ["green","Things you sign: letter, affidavit, check, contract", "letter", "affidavit", "check", "contract"],
+                  ["blue","words ending in boat: speed, sail, steam, motor", "speed", "sail", "steam", "motor"],
+                  ["purple","___ desert: Arabian, arid, barren, Sahara", "Arabian", "arid", "barren", "Sahara"]]
 
 
 
@@ -74,7 +74,7 @@ draw_active = False
 enter_un_active = False
 enter_cli_active = False
 redraw_active = True
-game_font = pygame.freetype.Font("font.ttf", 35)
+game_font = pygame.freetype.Font("font.ttf", 30)
 row_counter = 0
 finish_run = 0
 
