@@ -23,11 +23,23 @@ finish = pygame.image.load("Game Textures/finish.png").convert()
 
 
 example_string = [["yellow","synonyms for 'free': unlimited, unrestricted, unfettered, complimentary", "unlimited", "unrestricted", "unfettered", "complimentary"],
-                  ["green","Things you sign: letter, affidavit, check, contract", "letter", "affidavit", "check", "contract"],
-                  ["blue","words ending in boat: speed, sail, steam, motor", "speed", "sail", "steam", "motor"],
-                  ["purple","___ desert: Arabian, arid, barren, Sahara", "Arabian", "arid", "barren", "Sahara"]]
+                  ["green","Things you sign: letter, affidavit, check, contract", "letter", "affidavit", "check", "contract"]]
 
 
+file = open("nico_hints.txt")
+line = random.choice(file.readlines())
+line = line.split(",")
+line[5] = line[5].strip("\n")
+for i in range(4):
+    line[i+2] = line[i+2].strip(" ")
+line[1] = line[1] + ": " + line[2] + ", " + line[3] + ", " + line[4] + ", " + line[5]
+example_string.append(line)
+example_string.append(["purple","___ desert: Arabian, arid, barren, Sahara", "Arabian", "arid", "barren", "Sahara"])
+
+example_string[0][0] = "#e1e10cff"
+example_string[1][0] = "#6aa84fff"
+example_string[2][0] = "#4a86e8ff"
+example_string[3][0] = "#8e7cc3ff"
 
 #Block Positions
 block_vec = [
@@ -163,24 +175,24 @@ while run:
                         chosen_block = random.choice(block_vec)
                     chosen_block[1] = example[2+i]
                     pygame.draw.rect(screen, pygame.Color(210, 180, 180, 255), chosen_block[0])
-                    game_font.render_to(screen, (chosen_block[0].x + 30, chosen_block[0].y + 10), example[2+i], (0, 0, 0))
+                    game_font.render_to(screen, (chosen_block[0].x + 80 - len(example[2+i])*4, chosen_block[0].y + 20), example[2+i], (0, 0, 0))
                     pygame.display.flip()
             draw_active = True
 
         if redraw_active == False:
             for block in block_vec:
                 pygame.draw.rect(screen, pygame.Color(210, 180, 180, 255), block[0])
-                game_font.render_to(screen, (block[0].x + 30, block[0].y + 10), block[1], (0, 0, 0))
+                game_font.render_to(screen, (block[0].x + 80 - len(block[1])*4, block[0].y + 20), block[1], (0, 0, 0))
                 pygame.display.flip()
             if len(completed_vec) != 0:
                 for block in completed_vec:
                     pygame.draw.rect(screen, pygame.Color(block[1]), block[0])
                     pygame.display.flip()
-                    game_font.render_to(screen, (block[0].x + 30, block[0].y + 10), block[2], (0, 0, 0))
+                    game_font.render_to(screen, (block[0].x + 10, block[0].y + 20), block[2], (0, 0, 0))
                     pygame.display.flip()
                 if len(completed_vec) == 4:
+                    time.sleep(1.5)
                     pygame.mixer.music.stop()
-                    time.sleep(2)
                     gamestate = "finish"
             redraw_active = True
         
@@ -256,10 +268,7 @@ while run:
                         for example in example_string:
                             if word in example:
                                 category = example
-                        
-                        pygame.draw.rect(screen, pygame.Color(category[0]), row_vec[row_counter])
-                        game_font.render_to(screen, (row_vec[row_counter].x + 30, row_vec[row_counter].y + 10), category[1], (0, 0, 0))
-                        pygame.display.flip()
+            
                         completed_vec.append([row_vec[row_counter], category[0], category[1]])
 
                         row_counter += 1
@@ -282,12 +291,12 @@ while run:
                         if block in clicked_boxes and len(clicked_boxes) <= 4:
                             clicked_boxes.remove(block)
                             pygame.draw.rect(screen, pygame.Color(210, 180, 180, 255), block_identity)
-                            game_font.render_to(screen, (block_identity.x + 30, block_identity.y + 10), block[1], (0, 0, 0))
+                            game_font.render_to(screen, (block_identity.x + 80 - len(block[1])*4, block_identity.y + 20), block[1], (0, 0, 0))
                             pygame.display.flip()
                         elif len(clicked_boxes) < 4:
                             clicked_boxes.append(block)
                             pygame.draw.rect(screen, pygame.Color(210, 120, 120, 255), block_identity)
-                            game_font.render_to(screen, (block_identity.x + 30, block_identity.y + 10), block[1], (0, 0, 0))
+                            game_font.render_to(screen, (block_identity.x + 80 - len(block[1])*4, block_identity.y + 20), block[1], (0, 0, 0))
                             pygame.display.flip()
     while gamestate == "finish":
         if finish_run == 0:
