@@ -22,24 +22,50 @@ nice_job = pygame.image.load("Game Textures/nice_job.png").convert()
 finish = pygame.image.load("Game Textures/finish.png").convert()
 
 
-example_string = [["yellow","synonyms for 'free': unlimited, unrestricted, unfettered, complimentary", "unlimited", "unrestricted", "unfettered", "complimentary"],
-                  ["green","Things you sign: letter, affidavit, check, contract", "letter", "affidavit", "check", "contract"]]
+example_string = []
+
+def new_game():
+    file = open("dylan_yellow.txt")
+    line = random.choice(file.readlines())
+    line = line.split(",")
+    line[5] = line[5].strip("\n")
+    for i in range(4):
+        line[i+2] = line[i+2].strip(" ")
+    line[1] = line[1] + ": " + line[2] + ", " + line[3] + ", " + line[4] + ", " + line[5]
+    example_string.append(line)
+
+    file = open("savino_green.txt")
+    line = random.choice(file.readlines())
+    line = line.split(",")
+    line[5] = line[5].strip("\n")
+    for i in range(4):
+        line[i+2] = line[i+2].strip(" ")
+    line[1] = line[1] + ": " + line[2] + ", " + line[3] + ", " + line[4] + ", " + line[5]
+    example_string.append(line)
+
+    file = open("nico_blue.txt")
+    line = random.choice(file.readlines())
+    line = line.split(",")
+    line[5] = line[5].strip("\n")
+    for i in range(4):
+        line[i+2] = line[i+2].strip(" ")
+    line[1] = line[1] + ": " + line[2] + ", " + line[3] + ", " + line[4] + ", " + line[5]
+    example_string.append(line)
+
+    file = open("savino_purple.txt")
+    line = random.choice(file.readlines())
+    line = line.split(",")
+    line[5] = line[5].strip("\n")
+    for i in range(4):
+        line[i+2] = line[i+2].strip(" ")
+    line[1] = line[1] + ": " + line[2] + ", " + line[3] + ", " + line[4] + ", " + line[5]
+    example_string.append(line)
 
 
-file = open("nico_hints.txt")
-line = random.choice(file.readlines())
-line = line.split(",")
-line[5] = line[5].strip("\n")
-for i in range(4):
-    line[i+2] = line[i+2].strip(" ")
-line[1] = line[1] + ": " + line[2] + ", " + line[3] + ", " + line[4] + ", " + line[5]
-example_string.append(line)
-example_string.append(["purple","___ desert: Arabian, arid, barren, Sahara", "Arabian", "arid", "barren", "Sahara"])
-
-example_string[0][0] = "#e1e10cff"
-example_string[1][0] = "#6aa84fff"
-example_string[2][0] = "#4a86e8ff"
-example_string[3][0] = "#8e7cc3ff"
+    example_string[0][0] = "#e1e10cff"
+    example_string[1][0] = "#6aa84fff"
+    example_string[2][0] = "#4a86e8ff"
+    example_string[3][0] = "#8e7cc3ff"
 
 #Block Positions
 block_vec = [
@@ -89,6 +115,7 @@ redraw_active = True
 game_font = pygame.freetype.Font("font.ttf", 30)
 row_counter = 0
 finish_run = 0
+new_game_state = True
 
 #Clicked box vector
 clicked_boxes = []
@@ -147,7 +174,11 @@ while run:
     normal_active = False
 
     while gamestate == "game":
+        if new_game_state == True:
+            new_game()
+            new_game_state = False
         pos = pygame.mouse.get_pos()
+
         if blank_active == False:
             screen.blit(blank, (0,0))
             pygame.display.flip()
@@ -191,7 +222,7 @@ while run:
                     game_font.render_to(screen, (block[0].x + 10, block[0].y + 20), block[2], (0, 0, 0))
                     pygame.display.flip()
                 if len(completed_vec) == 4:
-                    time.sleep(1.5)
+                    time.sleep(3)
                     pygame.mixer.music.stop()
                     gamestate = "finish"
             redraw_active = True
@@ -215,6 +246,8 @@ while run:
                     row_counter = 0
                     completed_vec = []
                     clicked_boxes = []
+                    new_game_state = True
+                    example_string = []
             if enter_rect.collidepoint(pos) and len(clicked_boxes) == 4:
                 if enter_cli_active == False:
                     enter_un_active = False

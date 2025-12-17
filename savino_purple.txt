@@ -3,4 +3,4 @@ purple, Homonyms for things you draw, weal, wheal, wheel, soared
 purple, Homonyms for things you claim, rite, wright, write, innocents
 purple, Homonyms for things you win, won, meddle, metal, mettle
 purple, Homonyms for things you win, wore, meddle, metal, mettle
-purple, Homonyms for things you accept, complement, ary, ary, caul, cawl
+purple, Homonyms for things you accept, complement, ary, caul, cawl
